@@ -1,0 +1,23 @@
+version: "3.3"
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+    expose:
+      - 15672
+  minio:
+    image: bitnami/minio:latest
+    ports:
+      - "9000:9000"
+    expose:
+      - 9000
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=password
+      - MINIO_NOTIFY_AMQP_ENABLE=on
+      - MINIO_NOTIFY_AMQP_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq:rabbitmq
